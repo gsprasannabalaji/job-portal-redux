@@ -1,6 +1,9 @@
 import { Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import authHeader from "../utility/authHeader";
+import CustomSnackBar from "../Components/CustomSnackBar";
+import { useNavigate } from "react-router-dom";
 
 const Gallery = () => {
   const [galleryImages, setGalleryImages] = useState([]);
@@ -8,6 +11,7 @@ const Gallery = () => {
   const currentUserDetails = localStorage.getItem("userDetails")
     ? JSON.parse(localStorage.getItem("userDetails"))
     : "";
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -15,12 +19,23 @@ const Gallery = () => {
         const result = await axios.get(
           `${import.meta.env.VITE_USER_API_HOSTNAME}user/getImage/${
             currentUserDetails?.email
-          }`
+          }`, {
+            headers: authHeader()
+          }
         );
         const images = result?.data;
         setGalleryImages(images);
       } catch(error) {
-        setApiError("Network Request Failed");
+        if(error?.response?.status == 403) {
+          setApiError("You are not authorized to access this resource");
+          setTimeout(() => {
+            localStorage.removeItem("isAuthenticated");
+            localStorage.removeItem("userDetails");
+            navigate("/");
+          }, 2000);
+        }else {
+          setApiError(error?.response?.data?.message || 'Network Request Failed. Please try again later');
+        }
       }
     })();
   }, []);

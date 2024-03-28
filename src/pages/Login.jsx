@@ -32,12 +32,11 @@ const Login = () => {
         }
       );
 
-      if (response && JSON.stringify(response?.data)) {
-        const resObj = JSON.stringify(response?.data);
+      if (response && response?.data) {
         localStorage.setItem("isAuthenticated", true);
         localStorage.setItem(
           "userDetails",
-          JSON.stringify({ email: formData?.email, fullName: resObj?.fullName })
+          JSON.stringify({ email: formData?.email, fullName: response?.data?.fullName, userToken: response?.data?.userToken })
         );
         navigate("/home");
       }
