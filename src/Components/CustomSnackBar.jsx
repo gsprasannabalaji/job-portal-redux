@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IconButton, Snackbar } from "@mui/material";
 import { Close } from "@mui/icons-material";
 
@@ -11,6 +11,7 @@ const CustomSnackBar = ({ isOpen, message, onClose, customKey }) => {
     }
 
     setOpen(false);
+    onClose();
   };
 
   const action = (
@@ -21,7 +22,6 @@ const CustomSnackBar = ({ isOpen, message, onClose, customKey }) => {
         color="inherit"
         onClick={() => {
           handleClose();
-          onClose();
         }}
       >
         <Close fontSize="small" />
