@@ -13,23 +13,23 @@
 # Screenshots of the applications
 
 # Login 
-![alt text](image.png)
+![alt text](./docs/image.png)
 
 # Home Page
-![alt text](image-1.png)
+![alt text](./docs/image-1.png)
 
 # Job Listing Page
-![alt text](image-2.png)
+![alt text](./docs/image-2.png)
 
 # About Page
 
-![alt text](image-3.png)
+![alt text](./docs/image-3.png)
 
 # Contact Page
-![alt text](image-4.png)
+![alt text](./docs/image-4.png)
 
 # Gallery Page
-![alt text](image-5.png)
+![alt text](./docs/image-5.png)
 
 
 
