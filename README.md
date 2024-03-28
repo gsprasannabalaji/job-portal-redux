@@ -1,8 +1,35 @@
-# React + Vite
+# Job Portal Web applications
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- ReactJS, Material UI (MUI), React Router, Axios
 
-Currently, two official plugins are available:
+- This application has 6 pages.
+    - Login (/)
+    - Home (/home)
+    - About (/about)
+    - Job Listing (/jobListing)
+    - Contact (/contact)
+    - Gallery (/gallery)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Screenshots of the applications
+
+# Login 
+![alt text](image.png)
+
+# Home Page
+![alt text](image-1.png)
+
+# Job Listing Page
+![alt text](image-2.png)
+
+# About Page
+
+![alt text](image-3.png)
+
+# Contact Page
+![alt text](image-4.png)
+
+# Gallery Page
+![alt text](image-5.png)
+
+
+
