@@ -4,11 +4,11 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Gallery from "./pages/Gallery";
-import WithLayout from "./Components/WithLayout";
+import WithLayout from "./components/WithLayout";
 import JobListing from "./pages/JobListing";
 import customTheme from "./themes/customTheme";
 import { ThemeProvider } from "@mui/material";
-import Auth from "./Components/Auth";
+import Auth from "./components/Auth";
 import "./App.css";
 
 

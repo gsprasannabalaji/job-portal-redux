@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import CustomSnackBar from "../Components/CustomSnackBar";
+import CustomSnackBar from "../components/CustomSnackBar";
 
 const Login = () => {
   const [formData, setFormData] = useState({

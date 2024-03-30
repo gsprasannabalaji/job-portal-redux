@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import authHeader from "../utility/authHeader";
-import CustomSnackBar from "../Components/CustomSnackBar";
+import CustomSnackBar from "../components/CustomSnackBar";
 import { useNavigate } from "react-router-dom";
 
 const Gallery = () => {
@@ -26,8 +26,15 @@ const Gallery = () => {
         const images = result?.data;
         setGalleryImages(images);
       } catch(error) {
-        if(error?.response?.status == 403) {
+        if(error?.response?.status == 401) {
           setApiError("You are not authorized to access this resource");
+          setTimeout(() => {
+            localStorage.removeItem("isAuthenticated");
+            localStorage.removeItem("userDetails");
+            navigate("/");
+          }, 2000);
+        } else if(error?.response?.status == 403) {
+          setApiError(error?.response?.data?.message || 'Session Expired');
           setTimeout(() => {
             localStorage.removeItem("isAuthenticated");
             localStorage.removeItem("userDetails");
