@@ -29,14 +29,15 @@ const Login = () => {
         {
           email: formData?.email,
           password: formData?.password,
-        }
+        }, 
+        { withCredentials: true }
       );
 
       if (response && response?.data) {
         localStorage.setItem("isAuthenticated", true);
         localStorage.setItem(
           "userDetails",
-          JSON.stringify({ email: formData?.email, fullName: response?.data?.fullName, userToken: response?.data?.userToken })
+          JSON.stringify({ email: formData?.email, fullName: response?.data?.fullName })
         );
         navigate("/home");
       }

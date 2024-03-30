@@ -15,33 +15,39 @@ const Gallery = () => {
 
   useEffect(() => {
     (async () => {
-      try{
+      try {
         const result = await axios.get(
           `${import.meta.env.VITE_USER_API_HOSTNAME}user/getImage/${
             currentUserDetails?.email
-          }`, {
-            headers: authHeader()
-          }
+          }`,
+          { withCredentials: true }
         );
         const images = result?.data;
         setGalleryImages(images);
-      } catch(error) {
-        if(error?.response?.status == 401) {
+      } catch (error) {
+        if (error?.response?.status == 401) {
           setApiError("You are not authorized to access this resource");
           setTimeout(() => {
             localStorage.removeItem("isAuthenticated");
             localStorage.removeItem("userDetails");
             navigate("/");
           }, 2000);
-        } else if(error?.response?.status == 403) {
-          setApiError(error?.response?.data?.message || 'Session Expired');
-          setTimeout(() => {
+        } else if (error?.response?.status == 403) {
+          setApiError(error?.response?.data?.message || "Session Expired");
+          setTimeout(async() => {
+            await axios.get(
+              `${import.meta.env.VITE_USER_API_HOSTNAME}user/clearCookies`,
+              { withCredentials: true }
+            );
             localStorage.removeItem("isAuthenticated");
             localStorage.removeItem("userDetails");
             navigate("/");
           }, 2000);
-        }else {
-          setApiError(error?.response?.data?.message || 'Network Request Failed. Please try again later');
+        } else {
+          setApiError(
+            error?.response?.data?.message ||
+              "Network Request Failed. Please try again later"
+          );
         }
       }
     })();
@@ -79,7 +85,16 @@ const Gallery = () => {
           );
         })}
       </Grid>
-      {apiError && <CustomSnackBar isOpen={true} message={apiError} onClose={() => {setApiError(null)}} customKey={"login"} />}
+      {apiError && (
+        <CustomSnackBar
+          isOpen={true}
+          message={apiError}
+          onClose={() => {
+            setApiError(null);
+          }}
+          customKey={"gallery"}
+        />
+      )}
     </>
   );
 };

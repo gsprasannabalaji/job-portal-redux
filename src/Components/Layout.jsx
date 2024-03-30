@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
@@ -14,6 +14,8 @@ import AdbIcon from "@mui/icons-material/Adb";
 import Link from "@mui/material/Link";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { Grid, List, ListItem } from "@mui/material";
+import CustomSnackBar from "./CustomSnackBar";
+import axios from "axios";
 
 const pages = [
   { name: "Home", url: "/home" },
@@ -43,14 +45,15 @@ const footerData = {
     },
     {
       title: "Contacts",
-      links: [{ name: "Contact US", url: '/contact' }, { name: "Sales" }],
+      links: [{ name: "Contact US", url: "/contact" }, { name: "Sales" }],
     },
   ],
 };
 
 const Layout = ({ children }) => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [apiError, setApiError] = useState(null);
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
@@ -72,10 +75,21 @@ const Layout = ({ children }) => {
     navigate(url);
   };
 
-  const handleLogOut = () => {
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("userDetails");
-    navigate("/");
+  const handleLogOut = async () => {
+    try {
+      await axios.get(
+        `${import.meta.env.VITE_USER_API_HOSTNAME}user/clearCookies`,
+        { withCredentials: true }
+      );
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("userDetails");
+      navigate("/");
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Internal Server Error. Please try again later.";
+      setApiError(errorMessage);
+    }
   };
 
   return (
@@ -229,7 +243,7 @@ const Layout = ({ children }) => {
         <Container maxWidth="xl">{children}</Container>
       </Box>
       <Box component={"footer"} sx={{ padding: 3, backgroundColor: "#3d3d3d" }}>
-        <Container maxWidth="xl" sx={{ padding: '0!important' }}>
+        <Container maxWidth="xl" sx={{ padding: "0!important" }}>
           <Typography variant="h4" color="white" mb={3}>
             J S e a r c h
           </Typography>
@@ -253,6 +267,16 @@ const Layout = ({ children }) => {
           </Grid>
         </Container>
       </Box>
+      {apiError && (
+        <CustomSnackBar
+          isOpen={true}
+          message={apiError}
+          onClose={() => {
+            setApiError(null);
+          }}
+          customKey={"logout"}
+        />
+      )}
     </>
   );
 };
