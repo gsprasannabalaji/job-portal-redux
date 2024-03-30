@@ -1,7 +1,6 @@
 import { Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import authHeader from "../utility/authHeader";
 import CustomSnackBar from "../components/CustomSnackBar";
 import { useNavigate } from "react-router-dom";
 

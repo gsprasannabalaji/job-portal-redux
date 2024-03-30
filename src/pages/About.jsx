@@ -51,21 +51,6 @@ const About = () => {
           <ListItemText primary="Efficiency: We are committed to developing efficient tools and features that make the job search and recruitment process as smooth as possible." />
         </ListItem>
       </List>
-      {/* <List>
-        <ListItem>
-          Transparency: We believe in providing clear and honest information to
-          both job seekers and employers.
-        </ListItem>
-        <ListItem>
-          Inclusivity: We strive to create an inclusive platform that welcomes
-          individuals from all backgrounds and walks of life.
-        </ListItem>
-        <ListItem>
-          Efficiency: We are committed to developing efficient tools and
-          features that make the job search and recruitment process as smooth as
-          possible.
-        </ListItem>
-      </List> */}
       <Typography variant="h5" gutterBottom>
         Meet the Team
       </Typography>
