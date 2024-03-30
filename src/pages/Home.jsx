@@ -66,8 +66,7 @@ const Home = () => {
   };
 
   const handleSearchSubmit = () => {
-    // Here you can implement the logic to perform the search based on the searchQuery
-    console.log("Searching for:", searchQuery);
+    console.log("Search Success");
   };
 
   return (

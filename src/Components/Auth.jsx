@@ -7,8 +7,6 @@ const Auth = ({ children }) => {
   const location = useLocation();
   const currentPathname = location.pathname;
 
-  console.log(currentPathname);
-
   return isAuthenticated ? (
     currentPathname !== "/" ? (
       children

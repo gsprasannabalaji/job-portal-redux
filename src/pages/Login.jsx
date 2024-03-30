@@ -22,7 +22,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(import.meta.env.VITE_USER_API_HOSTNAME);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_USER_API_HOSTNAME}user/login`,
@@ -42,8 +41,6 @@ const Login = () => {
         navigate("/home");
       }
     } catch (error) {
-      // Handle errors
-      console.error("Error fetching data:", error);
       const errorMessage = error?.response?.data?.message || "Server is down. Please try again later.";
       setApiError(errorMessage);
     }
