@@ -43,7 +43,8 @@ const Login = () => {
     } catch (error) {
       // Handle errors
       console.error("Error fetching data:", error);
-      setApiError("Incorrect login credentails. Please try again");
+      const errorMessage = error?.response?.data?.message || "Server is down. Please try again later.";
+      setApiError(errorMessage);
     }
   };
 
