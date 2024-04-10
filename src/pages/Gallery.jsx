@@ -1,16 +1,21 @@
 import { Grid } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CustomSnackBar from "../components/CustomSnackBar";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setGalleryImages, setGalleryError } from "../features/gallery/gallerySlice";
+
 
 const Gallery = () => {
-  const [galleryImages, setGalleryImages] = useState([]);
-  const [apiError, setApiError] = useState(null);
-  const currentUserDetails = localStorage.getItem("userDetails")
-    ? JSON.parse(localStorage.getItem("userDetails"))
-    : "";
+  const { galleryImages, error } = useSelector(
+    (state) => state?.gallery
+  );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const currentUserDetails = localStorage.getItem("userDetails")
+  ? JSON.parse(localStorage.getItem("userDetails"))
+  : "";
 
   useEffect(() => {
     (async () => {
@@ -22,17 +27,23 @@ const Gallery = () => {
           { withCredentials: true }
         );
         const images = result?.data;
-        setGalleryImages(images);
+        dispatch(setGalleryImages(images));
       } catch (error) {
         if (error?.response?.status == 401) {
-          setApiError("You are not authorized to access this resource");
+          dispatch(setGalleryError({
+            message: "You are not authorized to access this resource",
+            status: 401,
+          }));
           setTimeout(() => {
             localStorage.removeItem("isAuthenticated");
             localStorage.removeItem("userDetails");
             navigate("/");
           }, 2000);
         } else if (error?.response?.status == 403) {
-          setApiError(error?.response?.data?.message || "Session Expired");
+          dispatch(setGalleryError({
+            message: error?.response?.data?.message || "Session Expired",
+            status: 403,
+          }));
           setTimeout(async() => {
             await axios.get(
               `${import.meta.env.VITE_USER_API_HOSTNAME}user/clearCookies`,
@@ -43,10 +54,10 @@ const Gallery = () => {
             navigate("/");
           }, 2000);
         } else {
-          setApiError(
-            error?.response?.data?.message ||
-              "Network Request Failed. Please try again later"
-          );
+          dispatch(setGalleryError({
+            message: error?.response?.data?.message || "Session Expired",
+            status: error?.response?.status || 500,
+          }));
         }
       }
     })();
@@ -84,12 +95,15 @@ const Gallery = () => {
           );
         })}
       </Grid>
-      {apiError && (
+      {error?.message && (
         <CustomSnackBar
           isOpen={true}
-          message={apiError}
+          message={error?.message}
           onClose={() => {
-            setApiError(null);
+            setGalleryError({
+              message: "",
+              status: 200
+            })
           }}
           customKey={"gallery"}
         />

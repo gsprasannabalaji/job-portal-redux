@@ -16,6 +16,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { Grid, List, ListItem } from "@mui/material";
 import CustomSnackBar from "./CustomSnackBar";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const pages = [
   { name: "Home", url: "/home" },
@@ -23,6 +24,11 @@ const pages = [
   { name: "About", url: "/about" },
   { name: "Contact", url: "/contact" },
   { name: "Gallery", url: "/gallery" },
+];
+
+const adminPages = [
+  { name: "Employees", url: "/employees" },
+  { name: "Add Jobs", url: "/addJobs" },
 ];
 
 const footerData = {
@@ -55,6 +61,7 @@ const Layout = ({ children }) => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [apiError, setApiError] = useState(null);
   const navigate = useNavigate();
+  const isAdmin = useSelector((state) => state?.user?.userData?.isAdmin);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -145,20 +152,37 @@ const Layout = ({ children }) => {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {pages?.map((page, index) => (
-                  <MenuItem key={index} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="left">
-                      <Link
-                        component="button"
-                        onClick={() => {
-                          handleNavigation(page?.url);
-                        }}
-                      >
-                        {page?.name}
-                      </Link>
-                    </Typography>
-                  </MenuItem>
-                ))}
+                {!isAdmin &&
+                  pages?.map((page, index) => (
+                    <MenuItem key={index} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="left">
+                        <Link
+                          component="button"
+                          onClick={() => {
+                            handleNavigation(page?.url);
+                          }}
+                        >
+                          {page?.name}
+                        </Link>
+                      </Typography>
+                    </MenuItem>
+                  ))}
+
+                {isAdmin &&
+                  adminPages?.map((page, index) => (
+                    <MenuItem key={index} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="left">
+                        <Link
+                          component="button"
+                          onClick={() => {
+                            handleNavigation(page?.url);
+                          }}
+                        >
+                          {page?.name}
+                        </Link>
+                      </Typography>
+                    </MenuItem>
+                  ))}
               </Menu>
             </Box>
             <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -188,17 +212,31 @@ const Layout = ({ children }) => {
                 justifyContent: { md: "center" },
               }}
             >
-              {pages.map((page, index) => (
-                <Link
-                  key={index}
-                  component="button"
-                  color="#fff"
-                  underline="none"
-                  onClick={() => handleNavigation(page.url)}
-                >
-                  {page?.name}
-                </Link>
-              ))}
+              {!isAdmin &&
+                pages.map((page, index) => (
+                  <Link
+                    key={index}
+                    component="button"
+                    color="#fff"
+                    underline="none"
+                    onClick={() => handleNavigation(page.url)}
+                  >
+                    {page?.name}
+                  </Link>
+                ))}
+
+              {isAdmin &&
+                adminPages?.map((page, index) => (
+                  <Link
+                    key={index}
+                    component="button"
+                    color="#fff"
+                    underline="none"
+                    onClick={() => handleNavigation(page.url)}
+                  >
+                    {page?.name}
+                  </Link>
+                ))}
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
@@ -242,31 +280,36 @@ const Layout = ({ children }) => {
       <Box sx={{ marginTop: 4, marginBottom: 4 }}>
         <Container maxWidth="xl">{children}</Container>
       </Box>
-      <Box component={"footer"} sx={{ padding: 3, backgroundColor: "#3d3d3d" }}>
-        <Container maxWidth="xl" sx={{ padding: "0!important" }}>
-          <Typography variant="h4" color="white" mb={3}>
-            J S e a r c h
-          </Typography>
-          <Grid container spacing={3}>
-            {footerData?.sections?.map((section, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
-                <Typography variant="h6" mb={1} color={"white"}>
-                  {section.title}
-                </Typography>
-                <List>
-                  {section.links.map((link, idx) => (
-                    <ListItem key={idx} sx={{ padding: 0, marginBottom: 2 }}>
-                      <RouterLink to={link?.url} style={{ color: "white" }}>
-                        {link.name}
-                      </RouterLink>
-                    </ListItem>
-                  ))}
-                </List>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+      {!isAdmin && (
+        <Box
+          component={"footer"}
+          sx={{ padding: 3, backgroundColor: "#3d3d3d" }}
+        >
+          <Container maxWidth="xl" sx={{ padding: "0!important" }}>
+            <Typography variant="h4" color="white" mb={3}>
+              J S e a r c h
+            </Typography>
+            <Grid container spacing={3}>
+              {footerData?.sections?.map((section, index) => (
+                <Grid item xs={12} sm={6} md={3} key={index}>
+                  <Typography variant="h6" mb={1} color={"white"}>
+                    {section.title}
+                  </Typography>
+                  <List>
+                    {section.links.map((link, idx) => (
+                      <ListItem key={idx} sx={{ padding: 0, marginBottom: 2 }}>
+                        <RouterLink to={link?.url} style={{ color: "white" }}>
+                          {link.name}
+                        </RouterLink>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        </Box>
+      )}
       {apiError && (
         <CustomSnackBar
           isOpen={true}

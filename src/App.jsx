@@ -10,7 +10,10 @@ import customTheme from "./themes/customTheme";
 import { ThemeProvider } from "@mui/material";
 import Auth from "./components/Auth";
 import "./App.css";
-
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import Employees from "./pages/Employees";
+import AddJobs from "./pages/AddJobs";
 
 const router = createBrowserRouter([
   {
@@ -41,14 +44,24 @@ const router = createBrowserRouter([
     path: "/jobListing",
     element: WithLayout(JobListing),
   },
+  {
+    path: "/employees",
+    element: WithLayout(Employees),
+  },
+  {
+    path: "/addJobs",
+    element: WithLayout(AddJobs),
+  },
 ]);
 
 const App = () => {
   return (
     <>
-      <ThemeProvider theme={customTheme}>
-        <RouterProvider router={router} />
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={customTheme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </Provider>
     </>
   );
 };

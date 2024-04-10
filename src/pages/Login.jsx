@@ -2,22 +2,20 @@ import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CustomSnackBar from "../components/CustomSnackBar";
+import { setApiError, setFormData } from "../features/login/loginSlice";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { formData, apiError} = useSelector((state) => state?.login);
   const navigate = useNavigate();
-  const [apiError, setApiError] = useState(null);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    dispatch(setFormData({ ...formData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -36,13 +34,17 @@ const Login = () => {
         localStorage.setItem("isAuthenticated", true);
         localStorage.setItem(
           "userDetails",
-          JSON.stringify({ email: formData?.email, fullName: response?.data?.fullName })
+          JSON.stringify({ email: formData?.email, fullName: response?.data?.fullName, role: response?.data?.role })
         );
-        navigate("/home");
+        if(response?.data?.role === "admin") {
+          navigate("/employees");
+        } else {
+          navigate("/home");
+        }
       }
     } catch (error) {
       const errorMessage = error?.response?.data?.message || "Server is down. Please try again later.";
-      setApiError(errorMessage);
+      dispatch(setApiError(errorMessage));
     }
   };
 
@@ -94,7 +96,7 @@ const Login = () => {
           </Button>
         </Box>
       </Box>
-      {apiError && <CustomSnackBar isOpen={true} message={apiError} onClose={() => {setApiError(null)}} customKey={"login"} />}
+      {apiError && <CustomSnackBar isOpen={true} message={apiError} onClose={() => {dispatch(setApiError(null))}} customKey={"login"} />}
     </>
   );
 };
