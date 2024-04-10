@@ -1,10 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { TextField, Button, Container, Typography } from "@mui/material";
-import { setNewJob } from "../features/jobs/addJobSlice";
+import { setNewJob, setNewJobError } from "../features/jobs/addJobSlice";
+import CustomSnackBar from "../components/CustomSnackBar";
 
 const AddJobs = () => {
-  const jobData = useSelector((state) => state?.addJob?.newJob);
+  const { newJob: jobData,  error} = useSelector((state) => state?.addJob);
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -15,7 +16,7 @@ const AddJobs = () => {
   const handleSubmit = async (e) => {
     e?.preventDefault();
     try {
-        const result = await axios.post(
+        await axios.post(
           `${import.meta.env.VITE_USER_API_HOSTNAME}create/job`,
           jobData,
           { withCredentials: true }
@@ -27,8 +28,16 @@ const AddJobs = () => {
             companyName: "",
             salary: "",
          }));
+         dispatch(setNewJobError({
+          message: "Added New Job Successfully",
+          status: 200
+         }))
     } catch (err) {
         console.log(err);
+        dispatch(setNewJobError({
+          message: "Network Failed. Please try again later",
+          status: 500,
+        }))
     };
   }
 
@@ -99,6 +108,10 @@ const AddJobs = () => {
           Submit
         </Button>
       </form>
+      {error?.message && <CustomSnackBar isOpen={true} message={error?.message} onClose={() => {dispatch(setNewJobError({
+        message: "",
+        status: 200
+      }))}} customKey={"addJob"} />}
     </Container>
   );
 };

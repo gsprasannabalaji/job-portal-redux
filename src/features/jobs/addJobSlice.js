@@ -8,6 +8,10 @@ const initialState = {
     companyName: "",
     salary: "",
   },
+  error: {
+    message: "",
+    status: 200,
+  },
 };
 
 export const newJobSlice = createSlice({
@@ -17,9 +21,12 @@ export const newJobSlice = createSlice({
     setNewJob: (state, action) => {
       state.newJob = action.payload;
     },
+    setNewJobError: (state, action) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { setNewJob } = newJobSlice.actions;
+export const { setNewJob, setNewJobError } = newJobSlice.actions;
 
 export default newJobSlice.reducer;
