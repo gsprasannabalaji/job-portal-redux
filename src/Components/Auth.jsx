@@ -16,35 +16,39 @@ const Auth = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      try {
-        const isAdminRole = await axios?.get(
-          `${
-            import.meta.env.VITE_USER_API_HOSTNAME
-          }validate/check-admin-cookie`,
-          {
-            withCredentials: true,
-          }
-        );
-
-        dispatch(setUserData({ isAdmin: isAdminRole?.data, isLoading: false } ));
-      } catch (err) {
-        dispatch(setUserData({ isAdmin: false, isLoading: false }));
-          try {
-            await axios.get(
-              `${import.meta.env.VITE_USER_API_HOSTNAME}user/clearCookies`,
-              { withCredentials: true }
-            );
-            localStorage.removeItem("isAuthenticated");
-            localStorage.removeItem("userDetails");
-            navigate("/");
-          } catch (error) {
-            const errorMessage =
-              error?.response?.data?.message ||
-              "Internal Server Error. Please try again later.";
-          }
-      }
-    })();
+    if(isAuthenticated) {
+      (async () => {
+        try {
+          const isAdminRole = await axios?.get(
+            `${
+              import.meta.env.VITE_USER_API_HOSTNAME
+            }validate/check-admin-cookie`,
+            {
+              withCredentials: true,
+            }
+          );
+  
+          dispatch(setUserData({ isAdmin: isAdminRole?.data, isLoading: false } ));
+        } catch (err) {
+          dispatch(setUserData({ isAdmin: false, isLoading: false }));
+            try {
+              await axios.get(
+                `${import.meta.env.VITE_USER_API_HOSTNAME}user/clearCookies`,
+                { withCredentials: true }
+              );
+              localStorage.removeItem("isAuthenticated");
+              localStorage.removeItem("userDetails");
+              navigate("/");
+            } catch (error) {
+              const errorMessage =
+                error?.response?.data?.message ||
+                "Internal Server Error. Please try again later.";
+            }
+        }
+      })();
+    } else {
+      dispatch(setUserData({ isAdmin: false, isLoading: false } ));
+    }
   }, [currentPathname]);
 
   if (isLoading) {
